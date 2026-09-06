@@ -1,0 +1,6 @@
+{
+  "name": "SAYA FORM",
+  "description": "Maison de direction créative premium pour athlètes et marques d'exception. Image. Identity. Direction.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
