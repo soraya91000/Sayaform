@@ -1,38 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { SayaFormLogo } from './brand/SayaFormLogo';
-import { SayaFormSymbol } from './brand/SayaFormSymbol';
-import { Menu, X, ArrowUpRight, ShieldCheck, Sparkles } from 'lucide-react';
-import { UniverseType } from '../types';
+import { Menu, X } from 'lucide-react';
 
 interface HeaderProps {
-  activeUniverse: UniverseType;
-  onSelectUniverse: (universe: UniverseType) => void;
-  onOpenMembershipModal: (tierId?: string) => void;
-  onOpenContactModal: () => void;
+  currentPage: 'home' | 'maison';
+  onNavigateToMaison: () => void;
+  onNavigateToHome: (sectionId?: string) => void;
+  onOpenContact: (subject?: string) => void;
+  onOpenClub: (tierId?: string) => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  activeUniverse,
-  onSelectUniverse,
-  onOpenMembershipModal,
-  onOpenContactModal,
+  currentPage,
+  onNavigateToMaison,
+  onNavigateToHome,
+  onOpenContact,
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 40);
+      setIsScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollTo = (id: string) => {
+  const handleNavClick = (target: 'maison' | string) => {
     setMobileMenuOpen(false);
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    if (target === 'maison') {
+      onNavigateToMaison();
+    } else {
+      onNavigateToHome(target);
     }
   };
 
@@ -40,143 +40,107 @@ export const Header: React.FC<HeaderProps> = ({
     <>
       <header
         id="main-header"
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled
-            ? 'bg-[#050B18]/92 backdrop-blur-md border-b border-[#C2927E]/20 py-3.5 shadow-2xl'
-            : 'bg-gradient-to-b from-[#050B18]/95 via-[#050B18]/60 to-transparent py-5'
+            ? 'bg-[#050B18]/95 backdrop-blur-md border-b border-[#C2927E]/20 py-3 shadow-lg'
+            : 'bg-[#FAF8F5]/90 backdrop-blur-sm border-b border-[#050B18]/5 py-4'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          {/* Brand Logo & Wordmark */}
-          <a
-            href="#"
-            id="header-brand-link"
+          {/* Logo Officiel Fixe SAYA FORM */}
+          <button
+            id="header-logo-link"
             className="flex items-center gap-3 group focus:outline-none"
-            onClick={(e) => {
-              e.preventDefault();
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
+            onClick={() => onNavigateToHome()}
+            aria-label="SAYA FORM Accueil"
           >
             <SayaFormLogo
-              size={44}
-              showWordmark={true}
-              id="header-sf-logo"
+              size={isScrolled ? 42 : 46}
+              id="header-official-logo"
             />
-          </a>
+          </button>
 
-          {/* Desktop Navigation */}
-          <nav id="desktop-nav" className="hidden lg:flex items-center gap-7">
-            {/* Quick Universe Filter */}
-            <div className="flex items-center bg-[#080F1F] p-1 rounded-full border border-[#C2927E]/20">
-              <button
-                id="header-universe-all"
-                onClick={() => onSelectUniverse('all')}
-                className={`px-3.5 py-1 text-[10px] uppercase tracking-[0.3em] font-light rounded-full transition-all duration-300 ${
-                  activeUniverse === 'all'
-                    ? 'bg-rosegold-gradient text-[#050B18] font-medium shadow-md'
-                    : 'text-[#FDFCF8]/70 hover:text-[#FDFCF8]'
-                }`}
-              >
-                Maison
-              </button>
-              <button
-                id="header-universe-athletes"
-                onClick={() => onSelectUniverse('athletes')}
-                className={`px-3.5 py-1 text-[10px] uppercase tracking-[0.3em] font-light rounded-full transition-all duration-300 ${
-                  activeUniverse === 'athletes'
-                    ? 'bg-rosegold-gradient text-[#050B18] font-medium shadow-md'
-                    : 'text-[#FDFCF8]/70 hover:text-[#FDFCF8]'
-                }`}
-              >
-                Athlètes
-              </button>
-              <button
-                id="header-universe-brands"
-                onClick={() => {
-                  onSelectUniverse('brands');
-                  scrollTo('section-brand-identity');
-                }}
-                className={`px-3.5 py-1 text-[10px] uppercase tracking-[0.3em] font-light rounded-full transition-all duration-300 ${
-                  activeUniverse === 'brands'
-                    ? 'bg-rosegold-gradient text-[#050B18] font-medium shadow-md'
-                    : 'text-[#FDFCF8]/70 hover:text-[#FDFCF8]'
-                }`}
-              >
-                Brands
-              </button>
-            </div>
-
+          {/* Navigation Simple */}
+          <nav id="desktop-nav" className="hidden md:flex items-center gap-8">
             <button
-              onClick={() => scrollTo('section-brand-identity')}
-              className="text-[10px] uppercase tracking-[0.35em] font-semibold text-[#DFC0B5] hover:text-[#C2927E] transition-colors"
+              onClick={() => handleNavClick('maison')}
+              className={`text-[11px] uppercase tracking-[0.25em] font-semibold transition-all py-1 ${
+                currentPage === 'maison'
+                  ? 'text-[#C2927E] border-b-2 border-[#C2927E] font-bold'
+                  : isScrolled
+                  ? 'text-[#FDFCF8]/80 hover:text-[#C2927E]'
+                  : 'text-[#050B18]/80 hover:text-[#C2927E]'
+              }`}
             >
-              Pôle Marques
+              Maison
             </button>
             <button
-              onClick={() => scrollTo('section-univers')}
-              className="text-[10px] uppercase tracking-[0.35em] font-light text-[#FDFCF8]/80 hover:text-[#C2927E] transition-colors"
+              onClick={() => handleNavClick('section-marques')}
+              className={`text-[11px] uppercase tracking-[0.25em] font-semibold transition-colors py-1 ${
+                isScrolled
+                  ? 'text-[#FDFCF8]/80 hover:text-[#C2927E]'
+                  : 'text-[#050B18]/80 hover:text-[#C2927E]'
+              }`}
             >
-              Univers
+              Marques & Entreprises
             </button>
             <button
-              onClick={() => scrollTo('section-manifesto')}
-              className="text-[10px] uppercase tracking-[0.35em] font-light text-[#FDFCF8]/80 hover:text-[#C2927E] transition-colors"
+              onClick={() => handleNavClick('section-athletes')}
+              className={`text-[11px] uppercase tracking-[0.25em] font-semibold transition-colors py-1 ${
+                isScrolled
+                  ? 'text-[#FDFCF8]/80 hover:text-[#C2927E]'
+                  : 'text-[#050B18]/80 hover:text-[#C2927E]'
+              }`}
             >
-              Direction
+              Athlètes & Talents
             </button>
             <button
-              onClick={() => scrollTo('section-portfolio')}
-              className="text-[10px] uppercase tracking-[0.35em] font-light text-[#FDFCF8]/80 hover:text-[#C2927E] transition-colors"
+              onClick={() => handleNavClick('section-offres')}
+              className={`text-[11px] uppercase tracking-[0.25em] font-semibold transition-colors py-1 ${
+                isScrolled
+                  ? 'text-[#FDFCF8]/80 hover:text-[#C2927E]'
+                  : 'text-[#050B18]/80 hover:text-[#C2927E]'
+              }`}
             >
-              Portfolio
+              Offres
             </button>
             <button
-              onClick={() => scrollTo('section-feed')}
-              className="text-[10px] uppercase tracking-[0.35em] font-light text-[#FDFCF8]/80 hover:text-[#C2927E] transition-colors"
+              onClick={() => handleNavClick('section-contact')}
+              className={`text-[11px] uppercase tracking-[0.25em] font-semibold transition-colors py-1 ${
+                isScrolled
+                  ? 'text-[#FDFCF8]/80 hover:text-[#C2927E]'
+                  : 'text-[#050B18]/80 hover:text-[#C2927E]'
+              }`}
             >
-              Journal
-            </button>
-            <button
-              onClick={() => scrollTo('section-membership')}
-              className="text-[10px] uppercase tracking-[0.35em] text-[#C2927E] font-medium hover:text-[#FDFCF8] transition-colors flex items-center gap-1.5"
-            >
-              <span>Access</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#C2927E] animate-pulse" />
+              Contact
             </button>
           </nav>
 
-          {/* Action Buttons */}
+          {/* Action Rapide Devis / Contact */}
           <div className="hidden sm:flex items-center gap-3">
             <button
-              id="header-cta-membership"
-              onClick={() => onOpenMembershipModal()}
-              className="relative px-5 py-2.5 rounded-full text-[10px] uppercase tracking-[0.3em] font-light text-[#FDFCF8] border border-[#C2927E]/40 hover:border-[#C2927E] hover:bg-[#C2927E]/10 transition-all duration-300 flex items-center gap-2 group"
+              onClick={() => onOpenContact('Demande de devis')}
+              className={`px-4 py-2 rounded-full text-[10px] uppercase tracking-[0.2em] font-bold transition-all ${
+                isScrolled
+                  ? 'bg-rosegold-gradient text-[#050B18] hover:opacity-90 shadow-md'
+                  : 'bg-[#050B18] text-[#FAF8F5] hover:bg-[#C2927E] hover:text-[#050B18]'
+              }`}
             >
-              <SayaFormSymbol size={16} showRing={false} />
-              <span>Accès Club</span>
-            </button>
-
-            <button
-              id="header-cta-contact"
-              onClick={onOpenContactModal}
-              className="px-5 py-2.5 rounded-full text-[10px] uppercase tracking-[0.3em] text-[#050B18] bg-rosegold-gradient font-medium hover:opacity-90 transition-all duration-300 shadow-[0_0_20px_rgba(194,146,126,0.3)] flex items-center gap-1.5"
-            >
-              <span>Contact</span>
-              <ArrowUpRight className="w-3.5 h-3.5" />
+              Demander un devis
             </button>
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="flex lg:hidden items-center gap-3">
-            <button
-              id="mobile-menu-toggle"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-[#F8F6F0] hover:text-[#C9937E] focus:outline-none"
-              aria-label="Ouvrir le menu"
-            >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
+          <button
+            id="mobile-menu-toggle"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className={`md:hidden p-2 rounded-lg transition-colors ${
+              isScrolled ? 'text-[#FDFCF8]' : 'text-[#050B18]'
+            }`}
+            aria-label="Menu de navigation"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
       </header>
 
@@ -184,73 +148,73 @@ export const Header: React.FC<HeaderProps> = ({
       {mobileMenuOpen && (
         <div
           id="mobile-drawer"
-          className="fixed inset-0 z-40 bg-[#070B14]/98 backdrop-blur-xl flex flex-col justify-between p-8 pt-28 lg:hidden animate-in fade-in duration-300"
+          className="fixed inset-0 z-40 bg-[#050B18] text-[#FDFCF8] flex flex-col justify-between p-8 pt-24 md:hidden animate-in fade-in duration-200"
         >
           <div className="flex flex-col space-y-6">
-            <div className="flex items-center gap-2 text-[#C9937E] text-xs uppercase tracking-[0.3em] pb-3 border-b border-[#C9937E]/20">
-              <SayaFormSymbol size={20} />
-              <span>SAYA FORM • Direction Artistique</span>
+            <div className="pb-4 border-b border-[#C2927E]/20 flex items-center justify-between">
+              <SayaFormLogo size={42} id="mobile-drawer-logo" />
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-[#FDFCF8]/70 hover:text-[#C2927E]"
+              >
+                <X className="w-6 h-6" />
+              </button>
             </div>
 
-            <div className="flex flex-col space-y-4">
+            <div className="flex flex-col space-y-5 pt-2">
               <button
-                onClick={() => scrollTo('section-brand-identity')}
-                className="text-left text-2xl font-bold uppercase tracking-tight text-[#DFC0B5] hover:text-[#C2927E]"
+                onClick={() => handleNavClick('maison')}
+                className={`text-left text-xl font-bold uppercase tracking-wider ${
+                  currentPage === 'maison'
+                    ? 'text-[#C2927E]'
+                    : 'text-[#FDFCF8] hover:text-[#C2927E]'
+                }`}
               >
-                01. Pôle Marques & Identité
+                Maison
               </button>
               <button
-                onClick={() => scrollTo('section-univers')}
-                className="text-left text-2xl font-bold uppercase tracking-tight text-[#FDFCF8] hover:text-[#C2927E]"
+                onClick={() => handleNavClick('section-marques')}
+                className="text-left text-xl font-bold uppercase tracking-wider text-[#FDFCF8] hover:text-[#C2927E]"
               >
-                02. Les Deux Univers
+                Marques & Entreprises
               </button>
               <button
-                onClick={() => scrollTo('section-manifesto')}
-                className="text-left text-2xl font-bold uppercase tracking-tight text-[#FDFCF8] hover:text-[#C2927E]"
+                onClick={() => handleNavClick('section-athletes')}
+                className="text-left text-xl font-bold uppercase tracking-wider text-[#FDFCF8] hover:text-[#C2927E]"
               >
-                03. Le Manifeste
+                Athlètes & Talents
               </button>
               <button
-                onClick={() => scrollTo('section-portfolio')}
-                className="text-left text-2xl font-bold uppercase tracking-tight text-[#FDFCF8] hover:text-[#C2927E]"
+                onClick={() => handleNavClick('section-offres')}
+                className="text-left text-xl font-bold uppercase tracking-wider text-[#FDFCF8] hover:text-[#C2927E]"
               >
-                04. Portfolio & Case Studies
+                Offres & Formules
               </button>
               <button
-                onClick={() => scrollTo('section-feed')}
-                className="text-left text-2xl font-bold uppercase tracking-tight text-[#FDFCF8] hover:text-[#C2927E]"
+                onClick={() => handleNavClick('section-contact')}
+                className="text-left text-xl font-bold uppercase tracking-wider text-[#FDFCF8] hover:text-[#C2927E]"
               >
-                05. Journal @sayaform
-              </button>
-              <button
-                onClick={() => scrollTo('section-membership')}
-                className="text-left text-2xl font-bold uppercase tracking-tight text-[#C2927E]"
-              >
-                06. Club Privé (Pass)
+                Contact & Devis
               </button>
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 pt-6 border-t border-[#C9937E]/20">
+          <div className="pt-6 border-t border-[#C2927E]/20 flex flex-col gap-3">
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
-                onOpenMembershipModal();
+                onOpenContact('Demande de devis');
               }}
-              className="w-full py-3.5 rounded-full text-center text-xs uppercase tracking-[0.25em] text-[#F8F6F0] border border-[#C9937E]/60"
+              className="w-full py-3.5 rounded-full bg-rosegold-gradient text-[#050B18] text-xs uppercase tracking-[0.2em] font-bold text-center"
             >
-              Rejoindre le Club (365€ - 750€)
+              Demander un devis
             </button>
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenContactModal();
-              }}
-              className="w-full py-3.5 rounded-full text-center text-xs uppercase tracking-[0.25em] text-[#070B14] bg-rosegold-gradient font-medium"
+            <a
+              href="mailto:sayaform1@gmail.com"
+              className="text-center text-xs text-[#C2927E] tracking-wider py-2"
             >
-              Demande de Direction Artistique
-            </button>
+              sayaform1@gmail.com
+            </a>
           </div>
         </div>
       )}
