@@ -303,7 +303,7 @@ export const LaMaisonPage: React.FC<LaMaisonPageProps> = ({
             </a>
             <span>•</span>
             <a
-              href="https://wa.me/message/RQEDCHRDQ6HJL1"
+              href="https://wa.me/33756966397"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-[#C2927E] transition-colors"

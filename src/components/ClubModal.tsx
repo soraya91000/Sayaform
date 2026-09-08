@@ -18,26 +18,33 @@ export const ClubModal: React.FC<ClubModalProps> = ({
   pole = 'Pôle Marques & Entreprises',
 }) => {
   const [name, setName] = useState('');
+  const [company, setCompany] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [message, setMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [whatsAppUrl, setWhatsAppUrl] = useState('');
+
+  const WHATSAPP_PHONE = '33756966397';
 
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const text = [
-      `✨ *SÉLECTION D'OFFRE — SAYA FORM* ✨`,
+    const lines = [
+      `*DEMANDE DE DEVIS & SÉLECTION D'OFFRE — SAYA FORM*`,
       ``,
-      `• *Offre :* ${tierName} (${tierPrice})`,
+      `• *Offre choisie :* ${tierName} (${tierPrice})`,
       `• *Pôle :* ${pole}`,
-      `• *Nom :* ${name}`,
+      `• *Nom complet :* ${name}`,
+      company ? `• *Entreprise / Marque :* ${company}` : null,
       `• *Email :* ${email}`,
-      phone ? `• *Téléphone :* ${phone}` : null,
-    ].filter(Boolean).join('\n');
+      `• *Téléphone :* ${phone}`,
+      message ? `\n*Message / Précisions :*\n${message}` : null,
+    ].filter(Boolean);
 
-    const url = `https://wa.me/message/RQEDCHRDQ6HJL1?text=${encodeURIComponent(text)}`;
+    const text = lines.join('\n');
+    const url = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(text)}`;
     setWhatsAppUrl(url);
     setSubmitted(true);
     window.open(url, '_blank', 'noopener,noreferrer');
@@ -116,14 +123,27 @@ export const ClubModal: React.FC<ClubModalProps> = ({
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="text-[10px] uppercase tracking-widest text-[#FDFCF8]/70 block mb-1 font-medium">
-                  Nom complet / Marque / Talent *
+                  Nom complet *
                 </label>
                 <input
                   type="text"
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Votre nom ou entité"
+                  placeholder="Votre nom et prénom"
+                  className="w-full px-4 py-3 rounded-xl bg-[#080F20] border border-white/15 text-sm text-[#FDFCF8] placeholder:text-[#FDFCF8]/30 focus:border-[#C2927E] focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] uppercase tracking-widest text-[#FDFCF8]/70 block mb-1 font-medium">
+                  Entreprise / Marque / Entité
+                </label>
+                <input
+                  type="text"
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                  placeholder="Nom de votre marque ou structure"
                   className="w-full px-4 py-3 rounded-xl bg-[#080F20] border border-white/15 text-sm text-[#FDFCF8] placeholder:text-[#FDFCF8]/30 focus:border-[#C2927E] focus:outline-none"
                 />
               </div>
@@ -153,6 +173,19 @@ export const ClubModal: React.FC<ClubModalProps> = ({
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+33 6 ..."
                   className="w-full px-4 py-3 rounded-xl bg-[#080F20] border border-white/15 text-sm text-[#FDFCF8] placeholder:text-[#FDFCF8]/30 focus:border-[#C2927E] focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] uppercase tracking-widest text-[#FDFCF8]/70 block mb-1 font-medium">
+                  Message / Précisions
+                </label>
+                <textarea
+                  rows={2}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Précisions sur votre besoin ou objectifs..."
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#080F20] border border-white/15 text-sm text-[#FDFCF8] placeholder:text-[#FDFCF8]/30 focus:border-[#C2927E] focus:outline-none resize-none"
                 />
               </div>
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Mail, Phone, ArrowUpRight, Check, Send, Sparkles, MessageSquare } from 'lucide-react';
 import { SayaFormLogo } from './brand/SayaFormLogo';
 
@@ -22,19 +22,57 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialSubject =
   const [submitted, setSubmitted] = useState(false);
   const [lastWhatsAppUrl, setLastWhatsAppUrl] = useState('');
 
-  const WHATSAPP_BASE_URL = 'https://wa.me/message/RQEDCHRDQ6HJL1';
+  const WHATSAPP_PHONE = '33756966397';
+  const WHATSAPP_BASE_URL = `https://wa.me/${WHATSAPP_PHONE}`;
+
+  useEffect(() => {
+    if (!initialSubject) return;
+
+    if (initialSubject.includes('Athlète') || initialSubject.includes('Talent')) {
+      setFormData((prev) => ({
+        ...prev,
+        pole: 'Pôle athlètes & talents',
+        type: 'Demander un devis',
+        projectType: initialSubject.includes('Image 360')
+          ? 'Formule Athlète 360 (850 €/mois)'
+          : initialSubject.includes('Image')
+          ? 'Formule Athlète Image (450 €/mois)'
+          : 'Management & Direction d\'image',
+      }));
+    } else if (initialSubject.includes('Marque') || initialSubject.includes('Entreprise')) {
+      setFormData((prev) => ({
+        ...prev,
+        pole: 'Pôle marques & entreprises',
+        type: 'Demander un devis',
+        projectType: initialSubject.includes('Essential')
+          ? 'Formule Essential (365 €)'
+          : initialSubject.includes('Signature')
+          ? 'Formule Signature (550 €)'
+          : initialSubject.includes('Direction')
+          ? 'Formule Direction (750 €)'
+          : 'Branding & Identité visuelle',
+      }));
+    } else if (initialSubject.includes('sur-mesure') || initialSubject.includes('Sur-mesure')) {
+      setFormData((prev) => ({
+        ...prev,
+        pole: 'Projet sur-mesure',
+        type: 'Demander un devis',
+        projectType: 'Projet sur-mesure / Autre',
+      }));
+    }
+  }, [initialSubject]);
 
   const buildWhatsAppMessage = () => {
     const lines = [
-      `✨ *DEMANDE DE DEVIS — SAYA FORM* ✨`,
+      `*DEMANDE DE DEVIS — SAYA FORM*`,
       ``,
       `• *Objet :* ${formData.type}`,
       `• *Pôle :* ${formData.pole}`,
-      `• *Nom :* ${formData.name}`,
+      `• *Nom complet :* ${formData.name}`,
       formData.company ? `• *Entreprise / Marque :* ${formData.company}` : null,
       `• *Email :* ${formData.email}`,
-      formData.phone ? `• *Téléphone :* ${formData.phone}` : null,
-      `• *Type de projet :* ${formData.projectType}`,
+      `• *Téléphone :* ${formData.phone}`,
+      `• *Type de projet / Offre :* ${formData.projectType}`,
       `• *Budget estimé :* ${formData.budget}`,
       ``,
       `*Message / Précisions :*`,
@@ -47,11 +85,11 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialSubject =
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const text = buildWhatsAppMessage();
-    const whatsappUrl = `${WHATSAPP_BASE_URL}?text=${encodeURIComponent(text)}`;
+    const whatsappUrl = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(text)}`;
     setLastWhatsAppUrl(whatsappUrl);
     setSubmitted(true);
 
-    // Ouvre directement WhatsApp Pro avec le message prérempli
+    // Ouvre directement WhatsApp vers le numéro +33756966397 avec le message prérempli
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
   };
 
@@ -105,7 +143,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialSubject =
 
               {/* Téléphone / WhatsApp */}
               <a
-                href="https://wa.me/message/RQEDCHRDQ6HJL1"
+                href={WHATSAPP_BASE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group p-4 rounded-2xl bg-[#080F20] border border-[#C2927E]/25 hover:border-[#C2927E] flex items-center justify-between transition-all"
