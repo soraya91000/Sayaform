@@ -7,6 +7,12 @@ interface OffresSectionProps {
   onOpenContact: (subject?: string) => void;
 }
 
+const PAYPAL_OFFERS = {
+  essential: 'https://paypal.me/sohsn91000/365EUR?locale.x=fr_FR&country.x=FR',
+  signature: 'https://paypal.me/sohsn91000/550EUR?locale.x=fr_FR&country.x=FR',
+  direction: 'https://paypal.me/sohsn91000/750EUR?locale.x=fr_FR&country.x=FR',
+};
+
 export const OffresSection: React.FC<OffresSectionProps> = ({
   onSelectOffer,
   onOpenContact,
@@ -122,13 +128,15 @@ export const OffresSection: React.FC<OffresSectionProps> = ({
                 </div>
 
                 <div className="pt-8 mt-6">
-                  <button
-                    onClick={() => onSelectOffer('Essential', '365 € / an', 'Pôle Marques & Entreprises')}
+                  <a
+                    href={PAYPAL_OFFERS.essential}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="w-full py-4 rounded-full bg-[#050B18] text-[#FDFCF8] hover:bg-[#C2927E] hover:text-[#050B18] text-xs uppercase tracking-[0.2em] font-bold flex items-center justify-center gap-2 transition-all shadow-md"
                   >
                     <span>Choisir Essential</span>
                     <ArrowUpRight className="w-4 h-4" />
-                  </button>
+                  </a>
                 </div>
               </div>
 
@@ -187,13 +195,15 @@ export const OffresSection: React.FC<OffresSectionProps> = ({
                 </div>
 
                 <div className="pt-8 mt-6">
-                  <button
-                    onClick={() => onSelectOffer('Signature', '550 € / an', 'Pôle Marques & Entreprises')}
+                  <a
+                    href={PAYPAL_OFFERS.signature}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="w-full py-4 rounded-full bg-rosegold-gradient text-[#050B18] hover:opacity-95 text-xs uppercase tracking-[0.2em] font-bold flex items-center justify-center gap-2 transition-all shadow-md"
                   >
                     <span>Choisir Signature</span>
                     <ArrowUpRight className="w-4 h-4" />
-                  </button>
+                  </a>
                 </div>
               </div>
 
@@ -251,13 +261,15 @@ export const OffresSection: React.FC<OffresSectionProps> = ({
                 </div>
 
                 <div className="pt-8 mt-6">
-                  <button
-                    onClick={() => onSelectOffer('Direction', '750 € / an', 'Pôle Marques & Entreprises')}
+                  <a
+                    href={PAYPAL_OFFERS.direction}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="w-full py-4 rounded-full bg-[#050B18] text-[#FDFCF8] hover:bg-[#C2927E] hover:text-[#050B18] text-xs uppercase tracking-[0.2em] font-bold flex items-center justify-center gap-2 transition-all shadow-md"
                   >
                     <span>Choisir Direction</span>
                     <ArrowUpRight className="w-4 h-4" />
-                  </button>
+                  </a>
                 </div>
               </div>
             </div>

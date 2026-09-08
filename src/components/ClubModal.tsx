@@ -21,12 +21,26 @@ export const ClubModal: React.FC<ClubModalProps> = ({
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [whatsAppUrl, setWhatsAppUrl] = useState('');
 
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const text = [
+      `✨ *SÉLECTION D'OFFRE — SAYA FORM* ✨`,
+      ``,
+      `• *Offre :* ${tierName} (${tierPrice})`,
+      `• *Pôle :* ${pole}`,
+      `• *Nom :* ${name}`,
+      `• *Email :* ${email}`,
+      phone ? `• *Téléphone :* ${phone}` : null,
+    ].filter(Boolean).join('\n');
+
+    const url = `https://wa.me/message/RQEDCHRDQ6HJL1?text=${encodeURIComponent(text)}`;
+    setWhatsAppUrl(url);
     setSubmitted(true);
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -60,10 +74,20 @@ export const ClubModal: React.FC<ClubModalProps> = ({
             <p className="text-sm text-[#FDFCF8]/75 font-light leading-relaxed">
               Votre sélection de la formule <span className="text-[#C2927E] font-semibold">{tierName}</span> ({tierPrice}) pour le <span className="text-[#DFC0B5]">{pole}</span> a bien été enregistrée. Nous vous contactons sous 24h pour initier votre accompagnement.
             </p>
-            <div className="pt-4">
+            <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+              {whatsAppUrl && (
+                <a
+                  href={whatsAppUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto px-6 py-3 rounded-full bg-rosegold-gradient text-[#050B18] text-xs uppercase tracking-widest font-bold"
+                >
+                  Ouvrir WhatsApp Pro
+                </a>
+              )}
               <button
                 onClick={onClose}
-                className="px-8 py-3 rounded-full bg-rosegold-gradient text-[#050B18] text-xs uppercase tracking-widest font-bold"
+                className="w-full sm:w-auto px-6 py-3 rounded-full border border-white/20 text-[#FDFCF8]/80 text-xs uppercase tracking-widest font-bold hover:bg-white/10"
               >
                 Fermer
               </button>

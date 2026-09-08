@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Phone, ArrowUpRight, Check, Send, Sparkles, MapPin } from 'lucide-react';
+import { Mail, Phone, ArrowUpRight, Check, Send, Sparkles, MessageSquare } from 'lucide-react';
 import { SayaFormLogo } from './brand/SayaFormLogo';
 
 interface ContactSectionProps {
@@ -11,16 +11,48 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialSubject =
     type: 'Demander un devis',
     pole: 'Pôle marques & entreprises',
     name: '',
+    company: '',
     email: '',
     phone: '',
+    projectType: 'Branding & Identité visuelle',
+    budget: '500 € - 1 500 €',
     message: '',
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [lastWhatsAppUrl, setLastWhatsAppUrl] = useState('');
+
+  const WHATSAPP_BASE_URL = 'https://wa.me/message/RQEDCHRDQ6HJL1';
+
+  const buildWhatsAppMessage = () => {
+    const lines = [
+      `✨ *DEMANDE DE DEVIS — SAYA FORM* ✨`,
+      ``,
+      `• *Objet :* ${formData.type}`,
+      `• *Pôle :* ${formData.pole}`,
+      `• *Nom :* ${formData.name}`,
+      formData.company ? `• *Entreprise / Marque :* ${formData.company}` : null,
+      `• *Email :* ${formData.email}`,
+      formData.phone ? `• *Téléphone :* ${formData.phone}` : null,
+      `• *Type de projet :* ${formData.projectType}`,
+      `• *Budget estimé :* ${formData.budget}`,
+      ``,
+      `*Message / Précisions :*`,
+      formData.message,
+    ].filter(Boolean);
+
+    return lines.join('\n');
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const text = buildWhatsAppMessage();
+    const whatsappUrl = `${WHATSAPP_BASE_URL}?text=${encodeURIComponent(text)}`;
+    setLastWhatsAppUrl(whatsappUrl);
     setSubmitted(true);
+
+    // Ouvre directement WhatsApp Pro avec le message prérempli
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -110,17 +142,27 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialSubject =
           {/* Right Column: Clean, Elegant Contact & Quote Form */}
           <div className="lg:col-span-7 bg-[#080F20] p-8 sm:p-10 rounded-3xl border border-[#C2927E]/30 shadow-2xl">
             {submitted ? (
-              <div className="py-12 text-center space-y-5">
+              <div className="py-12 text-center space-y-5 animate-in fade-in duration-300">
                 <div className="w-16 h-16 rounded-full bg-[#C2927E]/20 border-2 border-[#C2927E] flex items-center justify-center mx-auto text-[#C2927E]">
                   <Check className="w-8 h-8" />
                 </div>
                 <h3 className="text-2xl font-bold uppercase tracking-tight text-[#FDFCF8]">
-                  Message Transmis Avec Succès
+                  Demande Transmise
                 </h3>
-                <p className="text-sm text-[#FDFCF8]/75 max-w-md mx-auto font-light leading-relaxed">
-                  Votre demande a bien été reçue par la direction Saya Form. Nous prenons contact avec vous sous 24h ouvrées.
+                <p className="text-sm text-[#FDFCF8]/80 max-w-md mx-auto font-light leading-relaxed">
+                  Votre demande de devis a été préremplie sur WhatsApp Pro. Si la conversation ne s'est pas ouverte automatiquement, cliquez sur le bouton ci-dessous :
                 </p>
-                <div className="pt-4">
+
+                <div className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3">
+                  <a
+                    href={lastWhatsAppUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-rosegold-gradient text-[#050B18] text-xs uppercase tracking-[0.2em] font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-lg"
+                  >
+                    <MessageSquare className="w-4 h-4" />
+                    <span>Ouvrir mon WhatsApp Pro</span>
+                  </a>
                   <button
                     onClick={() => {
                       setSubmitted(false);
@@ -128,19 +170,22 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialSubject =
                         type: 'Demander un devis',
                         pole: 'Pôle marques & entreprises',
                         name: '',
+                        company: '',
                         email: '',
                         phone: '',
+                        projectType: 'Branding & Identité visuelle',
+                        budget: '500 € - 1 500 €',
                         message: '',
                       });
                     }}
-                    className="px-6 py-2.5 rounded-full border border-[#C2927E]/40 text-xs uppercase tracking-widest text-[#C2927E] hover:bg-[#C2927E] hover:text-[#050B18] transition-colors"
+                    className="w-full sm:w-auto px-6 py-3 rounded-full border border-[#C2927E]/40 text-xs uppercase tracking-widest text-[#C2927E] hover:bg-[#C2927E] hover:text-[#050B18] transition-colors"
                   >
-                    Envoyer une autre demande
+                    Nouvelle demande
                   </button>
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-5">
                 {/* Switcher: Demander un devis VS Prendre contact */}
                 <div>
                   <span className="text-[10px] uppercase tracking-[0.25em] text-[#C2927E] block mb-2 font-semibold">
@@ -191,22 +236,38 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialSubject =
                   </div>
                 </div>
 
-                {/* Name & Email Fields */}
+                {/* Name & Company Fields */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="text-[10px] uppercase tracking-widest text-[#FDFCF8]/70 block mb-1 font-medium">
-                      Nom / Société / Athlète *
+                      Nom complet *
                     </label>
                     <input
                       type="text"
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="Votre nom ou entité"
+                      placeholder="Prénom & Nom"
                       className="w-full px-4 py-3 rounded-xl bg-[#050B18] border border-white/15 text-sm text-[#FDFCF8] placeholder:text-[#FDFCF8]/30 focus:border-[#C2927E] focus:outline-none transition-colors"
                     />
                   </div>
 
+                  <div>
+                    <label className="text-[10px] uppercase tracking-widest text-[#FDFCF8]/70 block mb-1 font-medium">
+                      Entreprise / Marque / Entité
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.company}
+                      onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                      placeholder="Nom de votre structure"
+                      className="w-full px-4 py-3 rounded-xl bg-[#050B18] border border-white/15 text-sm text-[#FDFCF8] placeholder:text-[#FDFCF8]/30 focus:border-[#C2927E] focus:outline-none transition-colors"
+                    />
+                  </div>
+                </div>
+
+                {/* Email & Phone Fields */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="text-[10px] uppercase tracking-widest text-[#FDFCF8]/70 block mb-1 font-medium">
                       Adresse Email *
@@ -220,20 +281,62 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialSubject =
                       className="w-full px-4 py-3 rounded-xl bg-[#050B18] border border-white/15 text-sm text-[#FDFCF8] placeholder:text-[#FDFCF8]/30 focus:border-[#C2927E] focus:outline-none transition-colors"
                     />
                   </div>
+
+                  <div>
+                    <label className="text-[10px] uppercase tracking-widest text-[#FDFCF8]/70 block mb-1 font-medium">
+                      Numéro de Téléphone *
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      placeholder="+33 6 ..."
+                      className="w-full px-4 py-3 rounded-xl bg-[#050B18] border border-white/15 text-sm text-[#FDFCF8] placeholder:text-[#FDFCF8]/30 focus:border-[#C2927E] focus:outline-none transition-colors"
+                    />
+                  </div>
                 </div>
 
-                {/* Phone */}
-                <div>
-                  <label className="text-[10px] uppercase tracking-widest text-[#FDFCF8]/70 block mb-1 font-medium">
-                    Numéro de Téléphone (optionnel)
-                  </label>
-                  <input
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    placeholder="+33 6 ..."
-                    className="w-full px-4 py-3 rounded-xl bg-[#050B18] border border-white/15 text-sm text-[#FDFCF8] placeholder:text-[#FDFCF8]/30 focus:border-[#C2927E] focus:outline-none transition-colors"
-                  />
+                {/* Project Type & Budget Fields */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-[10px] uppercase tracking-widest text-[#C2927E] block mb-1 font-medium">
+                      Type de projet
+                    </label>
+                    <select
+                      value={formData.projectType}
+                      onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl bg-[#050B18] border border-white/15 text-sm text-[#FDFCF8] focus:border-[#C2927E] focus:outline-none transition-colors"
+                    >
+                      <option value="Branding & Identité visuelle">Branding & Identité visuelle</option>
+                      <option value="Re-branding complet">Re-branding complet</option>
+                      <option value="Création de site internet">Création de site internet</option>
+                      <option value="Management & Direction d'image">Management & Direction d'image</option>
+                      <option value="Formule Essential (365 €)">Formule Essential (365 €)</option>
+                      <option value="Formule Signature (550 €)">Formule Signature (550 €)</option>
+                      <option value="Formule Direction (750 €)">Formule Direction (750 €)</option>
+                      <option value="Formule Athlète Image (450 €/mois)">Formule Athlète Image (450 €/mois)</option>
+                      <option value="Formule Athlète 360 (850 €/mois)">Formule Athlète 360 (850 €/mois)</option>
+                      <option value="Projet sur-mesure / Autre">Projet sur-mesure / Autre</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] uppercase tracking-widest text-[#C2927E] block mb-1 font-medium">
+                      Budget envisagé
+                    </label>
+                    <select
+                      value={formData.budget}
+                      onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl bg-[#050B18] border border-white/15 text-sm text-[#FDFCF8] focus:border-[#C2927E] focus:outline-none transition-colors"
+                    >
+                      <option value="Moins de 500 €">Moins de 500 €</option>
+                      <option value="500 € - 1 500 €">500 € - 1 500 €</option>
+                      <option value="1 500 € - 5 000 €">1 500 € - 5 000 €</option>
+                      <option value="Plus de 5 000 €">Plus de 5 000 €</option>
+                      <option value="À définir ensemble">À définir ensemble</option>
+                    </select>
+                  </div>
                 </div>
 
                 {/* Message */}
@@ -254,10 +357,10 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialSubject =
                 {/* Submit button */}
                 <button
                   type="submit"
-                  className="w-full py-4 rounded-full bg-rosegold-gradient text-[#050B18] text-xs uppercase tracking-[0.22em] font-bold flex items-center justify-center gap-2 hover:opacity-95 transition-opacity shadow-xl"
+                  className="w-full py-4 rounded-full bg-rosegold-gradient text-[#050B18] text-xs uppercase tracking-[0.22em] font-bold flex items-center justify-center gap-2 hover:opacity-95 transition-opacity shadow-xl cursor-pointer"
                 >
                   <Send className="w-4 h-4" />
-                  <span>Transmettre la demande</span>
+                  <span>Envoyer / Demander un devis</span>
                 </button>
               </form>
             )}
