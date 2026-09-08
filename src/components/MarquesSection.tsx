@@ -1,9 +1,31 @@
 import React from 'react';
-import { ArrowUpRight, Palette, RefreshCw, Layout, Globe, Compass, CheckCircle2 } from 'lucide-react';
+import { ArrowUpRight, Palette, RefreshCw, Layout, Globe, Compass, CheckCircle2, ShoppingBag } from 'lucide-react';
 
 interface MarquesSectionProps {
   onOpenContact: (subject?: string) => void;
 }
+
+const WHATSAPP_PHONE = '33756966397';
+
+const getWebsiteWhatsAppUrl = (type: 'vitrine' | 'ecommerce') => {
+  const isVitrine = type === 'vitrine';
+  const offerName = isVitrine ? 'Site vitrine (à partir de 199 €)' : 'Site e-commerce (à partir de 300 €)';
+  const details = isVitrine
+    ? "Pour présenter une activité, une marque, un service ou un établissement avec une image professionnelle, claire et premium."
+    : "Pour vendre des produits ou services en ligne avec une boutique claire, moderne et cohérente avec l’identité de marque.";
+
+  const message = [
+    `*DEMANDE DE DEVIS — SAYA FORM*`,
+    ``,
+    `• *Objet :* Demande de devis site internet`,
+    `• *Pôle :* Pôle marques & entreprises`,
+    `• *Offre choisie :* ${offerName}`,
+    ``,
+    `Bonjour, je souhaite obtenir un devis pour mon projet : ${details}`,
+  ].join('\n');
+
+  return `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
+};
 
 const SERVICES_MARQUES = [
   {
@@ -148,6 +170,146 @@ export const MarquesSection: React.FC<MarquesSectionProps> = ({ onOpenContact })
               >
                 Initier un échange confidentiel
               </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Dedicated Web Section: Sites Internet */}
+        <div className="mt-20 pt-16 border-t border-[#050B18]/15">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
+            <div className="max-w-2xl">
+              <span className="text-[10px] uppercase tracking-[0.35em] text-[#8F5542] font-bold block mb-3">
+                CRÉATION & DÉVELOPPEMENT WEB
+              </span>
+              <h3 className="text-2xl sm:text-4xl font-bold uppercase tracking-tight text-[#050B18]">
+                SITES INTERNET &{' '}
+                <span className="text-[#C2927E]">FLAGSHIPS DIGITAUX</span>
+              </h3>
+              <p className="mt-3 text-sm sm:text-base text-[#050B18]/70 font-light leading-relaxed">
+                Des vitrines et boutiques en ligne façonnées sur-mesure pour sublimer votre univers de marque et convertir avec élégance.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {/* Card 1: Site vitrine */}
+            <div className="group rounded-3xl p-8 sm:p-10 bg-[#FAF8F5] border border-[#050B18]/10 hover:border-[#C2927E] transition-all duration-300 hover:shadow-xl flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-6">
+                  <div className="w-12 h-12 rounded-2xl bg-white border border-[#050B18]/10 flex items-center justify-center text-[#050B18] group-hover:bg-[#050B18] group-hover:text-[#FDFCF8] transition-colors">
+                    <Globe className="w-6 h-6" />
+                  </div>
+                  <span className="text-[10px] uppercase tracking-[0.25em] text-[#8F5542] font-bold px-3 py-1 rounded-full bg-white border border-[#050B18]/10">
+                    Présentation & Image
+                  </span>
+                </div>
+
+                <div className="space-y-2 mb-4">
+                  <h4 className="text-2xl font-bold uppercase tracking-tight text-[#050B18]">
+                    Site vitrine
+                  </h4>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-xs uppercase tracking-wider text-[#050B18]/60 font-medium">à partir de</span>
+                    <span className="text-3xl sm:text-4xl font-bold font-mono text-[#C2927E]">199 €</span>
+                  </div>
+                </div>
+
+                <p className="text-sm text-[#050B18]/80 font-light leading-relaxed mb-6">
+                  Pour présenter une activité, une marque, un service ou un établissement avec une image professionnelle, claire et premium.
+                </p>
+
+                <div className="pt-4 border-t border-[#050B18]/10 space-y-2 mb-8">
+                  <div className="flex items-center gap-2.5 text-xs text-[#050B18]/80">
+                    <CheckCircle2 className="w-4 h-4 text-[#C2927E] shrink-0" />
+                    <span>Design sur-mesure & responsive mobile absolu</span>
+                  </div>
+                  <div className="flex items-center gap-2.5 text-xs text-[#050B18]/80">
+                    <CheckCircle2 className="w-4 h-4 text-[#C2927E] shrink-0" />
+                    <span>Présentation claire de vos services & identité</span>
+                  </div>
+                  <div className="flex items-center gap-2.5 text-xs text-[#050B18]/80">
+                    <CheckCircle2 className="w-4 h-4 text-[#C2927E] shrink-0" />
+                    <span>Formulaire de contact & intégration WhatsApp directe</span>
+                  </div>
+                  <div className="flex items-center gap-2.5 text-xs text-[#050B18]/80">
+                    <CheckCircle2 className="w-4 h-4 text-[#C2927E] shrink-0" />
+                    <span>Optimisation technique, rapidité & référencement SEO</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <a
+                  href={getWebsiteWhatsAppUrl('vitrine')}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-4 rounded-full bg-[#050B18] text-[#FDFCF8] hover:bg-[#C2927E] hover:text-[#050B18] text-xs uppercase tracking-[0.2em] font-bold flex items-center justify-center gap-2 transition-all shadow-md"
+                >
+                  <span>Demander un devis</span>
+                  <ArrowUpRight className="w-4 h-4" />
+                </a>
+              </div>
+            </div>
+
+            {/* Card 2: Site e-commerce */}
+            <div className="group rounded-3xl p-8 sm:p-10 bg-[#050B18] text-[#FDFCF8] border border-[#C2927E]/40 hover:border-[#C2927E] transition-all duration-300 hover:shadow-2xl flex flex-col justify-between relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-48 h-48 bg-[#C2927E]/10 blur-[60px] rounded-full pointer-events-none" />
+
+              <div className="relative z-10">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="w-12 h-12 rounded-2xl bg-[#080F20] border border-[#C2927E]/40 flex items-center justify-center text-[#C2927E]">
+                    <ShoppingBag className="w-6 h-6" />
+                  </div>
+                  <span className="text-[10px] uppercase tracking-[0.25em] text-[#C2927E] font-bold px-3 py-1 rounded-full bg-[#080F20] border border-[#C2927E]/30">
+                    Boutique en ligne
+                  </span>
+                </div>
+
+                <div className="space-y-2 mb-4">
+                  <h4 className="text-2xl font-bold uppercase tracking-tight text-[#FDFCF8]">
+                    Site e-commerce
+                  </h4>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-xs uppercase tracking-wider text-[#FDFCF8]/60 font-medium">à partir de</span>
+                    <span className="text-3xl sm:text-4xl font-bold font-mono text-[#C2927E]">300 €</span>
+                  </div>
+                </div>
+
+                <p className="text-sm text-[#FDFCF8]/80 font-light leading-relaxed mb-6">
+                  Pour vendre des produits ou services en ligne avec une boutique claire, moderne et cohérente avec l’identité de marque.
+                </p>
+
+                <div className="pt-4 border-t border-white/10 space-y-2 mb-8">
+                  <div className="flex items-center gap-2.5 text-xs text-[#FDFCF8]/85">
+                    <CheckCircle2 className="w-4 h-4 text-[#C2927E] shrink-0" />
+                    <span>Catalogue produits immersif & navigation fluide</span>
+                  </div>
+                  <div className="flex items-center gap-2.5 text-xs text-[#FDFCF8]/85">
+                    <CheckCircle2 className="w-4 h-4 text-[#C2927E] shrink-0" />
+                    <span>Paiements sécurisés (CB, Apple Pay, Stripe / PayPal)</span>
+                  </div>
+                  <div className="flex items-center gap-2.5 text-xs text-[#FDFCF8]/85">
+                    <CheckCircle2 className="w-4 h-4 text-[#C2927E] shrink-0" />
+                    <span>Tunnel d'achat optimisé pour la conversion</span>
+                  </div>
+                  <div className="flex items-center gap-2.5 text-xs text-[#FDFCF8]/85">
+                    <CheckCircle2 className="w-4 h-4 text-[#C2927E] shrink-0" />
+                    <span>Cohérence visuelle totale avec l’identité de marque</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="relative z-10">
+                <a
+                  href={getWebsiteWhatsAppUrl('ecommerce')}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-4 rounded-full bg-rosegold-gradient text-[#050B18] hover:opacity-95 text-xs uppercase tracking-[0.2em] font-bold flex items-center justify-center gap-2 transition-all shadow-lg"
+                >
+                  <span>Demander un devis</span>
+                  <ArrowUpRight className="w-4 h-4" />
+                </a>
+              </div>
             </div>
           </div>
         </div>

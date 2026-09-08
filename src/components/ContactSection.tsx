@@ -44,7 +44,11 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialSubject =
         ...prev,
         pole: 'Pôle marques & entreprises',
         type: 'Demander un devis',
-        projectType: initialSubject.includes('Essential')
+        projectType: initialSubject.includes('vitrine') || initialSubject.includes('Vitrine')
+          ? 'Site vitrine (à partir de 199 €)'
+          : initialSubject.includes('commerce') || initialSubject.includes('Commerce')
+          ? 'Site e-commerce (à partir de 300 €)'
+          : initialSubject.includes('Essential')
           ? 'Formule Essential (365 €)'
           : initialSubject.includes('Signature')
           ? 'Formule Signature (550 €)'
@@ -348,7 +352,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialSubject =
                     >
                       <option value="Branding & Identité visuelle">Branding & Identité visuelle</option>
                       <option value="Re-branding complet">Re-branding complet</option>
-                      <option value="Création de site internet">Création de site internet</option>
+                      <option value="Site vitrine (à partir de 199 €)">Site vitrine (à partir de 199 €)</option>
+                      <option value="Site e-commerce (à partir de 300 €)">Site e-commerce (à partir de 300 €)</option>
+                      <option value="Création de site internet">Création de site internet (sur-mesure)</option>
                       <option value="Management & Direction d'image">Management & Direction d'image</option>
                       <option value="Formule Essential (365 €)">Formule Essential (365 €)</option>
                       <option value="Formule Signature (550 €)">Formule Signature (550 €)</option>
